@@ -1,15 +1,42 @@
-import sys
-import os
-# Asegura que Python encuentre el módulo 'src' desde la carpeta 'tests'
+import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from src.storage import TaskStorage
 from src.service import TaskService
 from src.notifier import Notifier
 
-# =====================================================================
-# Pruebas  de Integración Iniciales
-# =====================================================================
+# ==========================================
+# STUBS MANUALES PARA EL ENFOQUE TOP-DOWN
+# ==========================================
+
+class StorageStub:
+    """Stub que simula el almacenamiento en memoria y registra llamadas."""
+    def __init__(self):
+        self.tasks_in_memory = []
+        self.save_called_with = None
+        self.load_called_count = 0
+
+    def load(self):
+        self.load_called_count += 1
+        return self.tasks_in_memory
+
+    def save(self, tasks):
+        self.save_called_with = tasks
+        self.tasks_in_memory = tasks
+
+
+class NotifierStub:
+    """Stub que simula el notificador y registra los mensajes enviados."""
+    def __init__(self):
+        self.send_called_with = None
+
+    def send(self, message):
+        self.send_called_with = message
+
+
+# ==========================================
+# CLASES DE PRUEBAS
+# ==========================================
 
 class TestServiceIntegration:
     def test_add_task_happy_path(self):
@@ -27,89 +54,43 @@ class TestServiceIntegration:
         assert service.complete_task("Aprender pytest") is True
 
 
-# =====================================================================
-# PARTE 4.1: Enfoque Top-Down (Aislamiento con Stubs Manuales)
-# =====================================================================
-
-class StorageStub:
-    """
-    Stub manual para TaskStorage.
-    Simula el almacenamiento en memoria y actúa como sensor para auditoría.
-    """
-    def __init__(self, preset_tasks=None):
-        # Permite precargar tareas en el almacenamiento simulado
-        self.tasks = preset_tasks if preset_tasks is not None else []
-        self.save_called = False
-        self.last_saved_tasks = None
-
-    def load(self):
-        return self.tasks
-
-    def save(self, tasks):
-        self.save_called = True
-        self.last_saved_tasks = tasks
-
-
-class NotifierStub:
-    """
-    Stub manual para Notifier.
-    Evita fallos aleatorios de red/simulación y registra las llamadas recibidas.
-    """
-    def __init__(self):
-        self.send_called = False
-        self.last_message = None
-
-    def send(self, message):
-        self.send_called = True
-        self.last_message = message
-
-
 class TestTopDown:
-    def test_add_task_top_down_success(self):
-        """
-        Valida el camino feliz: el servicio interactúa correctamente con las
-        capas inferiores enviando los parámetros adecuados a los Stubs.
-        """
-        # Arreglar (Arrange)
-        storage_stub = StorageStub(preset_tasks=[])
+    """Parte 4.1: Pruebas de integración con enfoque Top-Down."""
+
+    def test_add_task_top_down_flow(self):
+        # 1. Inicializar los Stubs aislados
+        storage_stub = StorageStub()
         notifier_stub = NotifierStub()
+        
+        # 2. Inyectar stubs en el servicio (Módulo de nivel superior)
         service = TaskService(storage_stub, notifier_stub)
-        task_title = "Estudiar para el parcial"
-
-        # Actuar (Act)
-        result = service.add_task(task_title)
-
-        # Afirmar (Assert)
-        # 1. El servicio debe reportar éxito en su ejecución
+        
+        # 3. Ejecutar la acción
+        result = service.add_task("Estudiar Calidad de Software")
+        
+        # 4. VALIDACIONES DE LOGICA Y FLUJO (Contratos de comunicación)
         assert result is True
         
-        # 2. Verificación de Integración: ¿Se invocó el almacenamiento con los datos correctos?
-        assert storage_stub.save_called is True
-        assert len(storage_stub.last_saved_tasks) == 1
-        assert storage_stub.last_saved_tasks[0]["title"] == task_title
+        # Verificar que se cargó el storage y se guardó la estructura correcta
+        assert storage_stub.load_called_count == 1
+        assert storage_stub.save_called_with == [{"title": "Estudiar Calidad de Software", "done": False}]
         
-        # 3. Verificación de Comunicación: ¿Se notificó la creación con el mensaje esperado?
-        assert notifier_stub.send_called is True
-        assert notifier_stub.last_message == f"Tarea '{task_title}' creada"
+        # Verificar que el Notifier recibió el mensaje exacto esperado por el contrato
+        assert notifier_stub.send_called_with == "Tarea 'Estudiar Calidad de Software' creada"
 
-    def test_add_task_top_down_duplicate(self):
-        """
-        Valida que el servicio lea el almacenamiento y rechace tareas duplicadas,
-        frenando llamadas innecesarias al Notificador y al método Save.
-        """
-        # Arreglar (Arrange)
-        existing_task = {"title": "Comprar leche", "done": False}
-        storage_stub = StorageStub(preset_tasks=[existing_task])
+    def test_add_duplicate_task_top_down(self):
+        storage_stub = StorageStub()
         notifier_stub = NotifierStub()
-        service = TaskService(storage_stub, notifier_stub)
-
-        # Actuar (Act)
-        result = service.add_task("Comprar leche")
-
-        # Afirmar (Assert)
-        # 1. El servicio debe retornar False al detectar el duplicado
-        assert result is False
         
-        # 2. Auditoría de comportamiento: No debe alterarse el almacenamiento ni enviar alertas
-        assert storage_stub.save_called is False
-        assert notifier_stub.send_called is False
+        # Pre-cargar el stub con una tarea existente
+        storage_stub.tasks_in_memory = [{"title": "Tarea Duplicada", "done": False}]
+        
+        service = TaskService(storage_stub, notifier_stub)
+        
+        # Intentar añadir el mismo título
+        result = service.add_task("Tarea Duplicada")
+        
+        # Validar que retorna False, NO guarda cambios y NO genera notificación
+        assert result is False
+        assert storage_stub.save_called_with is None  # No debió llamar a save()
+        assert notifier_stub.send_called_with is None  # No debió notificar
