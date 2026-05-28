@@ -72,12 +72,7 @@ class TestStorageDriver:
 
     def test_save_empty_title_policy(self):
         """
-        4. Intento de guardar un título vacío.
-        POLÍTICA DEFINIDA: Como TaskStorage es un componente de bajo nivel encargado 
-        estrictamente de la serialización I/O (JSON), NO debe imponer reglas de negocio. 
-        Debe permitir el guardado si la estructura es válida, dejando la responsabilidad 
-        de la validación semántica (texto vacío) a la capa superior (TaskService).
-        """
+     
         storage = TaskStorage(TEST_FILE)
         corrupted_task = [{"title": "", "done": False}]
         
