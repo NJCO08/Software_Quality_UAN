@@ -1,6 +1,6 @@
 """
-Driver de pruebas de integración - Enfoque Bottom-Up (Parte 4.2)
-Prueba de manera aislada el componente TaskStorage.
+Driver de pruebas de integración - Enfoque Bottom-Up (Parte 4.2 y Parte 5)
+Prueba de manera aislada el componente TaskStorage ante escenarios normales y extremos.
 """
 
 import sys
@@ -76,4 +76,20 @@ class TestStorageDriver:
         assert len(loaded_data) == 1
         assert loaded_data[0]["title"] == "" 
 
+    # =========================================================================
+    # CASOS EXTREMOS DE PERSISTENCIA - PARTE 5
+    # =========================================================================
+
+    def test_file_is_empty_corrupted_policy(self):
+        """Parte 5: Caso extremo donde el archivo JSON existe pero está totalmente vacío (0 bytes)."""
+        # Forzar la creación de un archivo físico en blanco sin formato JSON válido
+        with open(TEST_FILE, 'w', encoding='utf-8') as f:
+            f.write("") 
+            
+        storage = TaskStorage(TEST_FILE)
         
+        # Gracias a la programación defensiva en storage.py, el capturador JSONDecodeError
+        # debe evitar que la app explote y retornar un arreglo funcional vacío []
+        loaded_data = storage.load()
+        assert isinstance(loaded_data, list)
+        assert len(loaded_data) == 0
