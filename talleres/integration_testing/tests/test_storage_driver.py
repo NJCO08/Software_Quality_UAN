@@ -29,12 +29,9 @@ class TestStorageDriver:
 
     def test_file_does_not_exist_initialization(self):
         """1. Archivo no existe: debe crearse automáticamente con una lista vacía."""
-        # Al instanciar, si no existe el archivo, el constructor debe inicializarlo
         storage = TaskStorage(TEST_FILE)
-        
         assert os.path.exists(TEST_FILE) is True
         
-        # Validar que al leerlo contenga una estructura de lista vacía
         data = storage.load()
         assert isinstance(data, list)
         assert len(data) == 0
@@ -44,10 +41,8 @@ class TestStorageDriver:
         storage = TaskStorage(TEST_FILE)
         task_structure = [{"title": "Lavar la ropa", "done": False}]
         
-        # Ejecutar acción de guardado
         storage.save(task_structure)
         
-        # Recuperar datos e integrar validaciones
         loaded_data = storage.load()
         assert len(loaded_data) == 1
         assert loaded_data[0]["title"] == "Lavar la ropa"
@@ -71,12 +66,10 @@ class TestStorageDriver:
         assert loaded_data[2]["title"] == "Hacer calistenia"
 
     def test_save_empty_title_policy(self):
-        """
-     
+        """4. Título vacío: El storage lo permite por ser un JSON válido."""
         storage = TaskStorage(TEST_FILE)
         corrupted_task = [{"title": "", "done": False}]
         
-        # Bajo esta política, el storage guarda el JSON sin lanzar excepciones
         storage.save(corrupted_task)
         
         loaded_data = storage.load()
