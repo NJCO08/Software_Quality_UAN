@@ -74,4 +74,4 @@ class TestStorageDriver:
         
         loaded_data = storage.load()
         assert len(loaded_data) == 1
-        assert loaded_data[0]["title"] == ""
+        assert loaded_data[0]["title"] == "" 
