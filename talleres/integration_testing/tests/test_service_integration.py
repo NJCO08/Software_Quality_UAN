@@ -8,7 +8,7 @@ from src.service import TaskService
 from src.notifier import Notifier
 
 # =====================================================================
-# Pruebas de Integración Iniciales
+# Pruebas  de Integración Iniciales
 # =====================================================================
 
 class TestServiceIntegration:
