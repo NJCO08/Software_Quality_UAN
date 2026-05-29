@@ -59,7 +59,7 @@ Esto permite validar que la base de datos JSON lee, escribe e inicializa los arc
 
 ## ¿Qué cambios se hicieron?
 El archivo tests/test_storage_driver.py tenía una versión inicial débil que solo probaba un caso básico y dejaba basura en el disco.
-En la Parte 4.2, se reorganizó el código y se le añadió un fixture automatizado que limpia el entorno. Se expandió el driver a 4 pruebas rigurosas: creación con lista vacía si el archivo no existe, flujo unitario, persistencia de múltiples tareas en orden, y la política para títulos vacíos (donde el storage permite guardarlo por ser un archivo físico válido, delegando la regla de negocio al servicio), logrando un componente de persistencia robusto e independiente.
+En la Parte 4.2, se reorganizó el código y se le añadió un fixture automatizado que limpia el entorno. Se expandió el driver a 5 pruebas rigurosas: creación con lista vacía si el archivo no existe, flujo unitario, persistencia de múltiples tareas en orden, y la política para títulos vacíos (donde el storage permite guardarlo por ser un archivo físico válido, delegando la regla de negocio al servicio), logrando un componente de persistencia robusto e independiente.
 
 ### 4.3 Enfoque Sandwich
 Se realizaron las modificaciones pertinentes, revise el archivo 
