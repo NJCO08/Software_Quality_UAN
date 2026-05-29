@@ -133,8 +133,8 @@ El siguiente esquema ilustra cómo interactúan los componentes reales del siste
   [Bottom-Up]  --> Ataca de forma aislada mediante un      +--> Driver directo
   [Sandwich]   --> Combina: TaskStorage (REAL) + NotifierSandwichStub
   [Opcionales] --> Aísla la red mediante un NotifierMock genérico
-
-8.2 Batería de Pruebas Adicionales: "Error Guessing"
+```
+## 8.2 Batería de Pruebas Adicionales: "Error Guessing"
 
 ## ¿Qué se hizo?: 
 Se creó un archivo de pruebas (test_error_guessing_opcional.py) usando un Mock para inyectar entradas anómalas: cadenas vacías/espacios, inyección de código HTML (<script>) y duplicados combinando mayúsculas y minúsculas.
