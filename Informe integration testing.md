@@ -105,7 +105,9 @@ Usaría el enfoque bottom-up cuando los módulos inferiores, como el almacenamie
 En cambio, usaría top-down cuando quiero validar primero la lógica del sistema y el flujo general de la aplicación. En este caso, service.py es el módulo principal porque coordina la comunicación entre el almacenamiento y el notificador. Por eso, usando stubs se puede probar primero la lógica del servicio sin depender de que los demás módulos funcionen completamente. 
 
 ## ¿Cómo aplicarías stubs y drivers en un proyecto real para desacoplar dependencias externas?
-En un proyecto real con microservicios o bases de datos externas usaría stubs para simular servicios que todavía no existen o son difíciles de controlar durante las pruebas, por ejemplo una API de pagos o un servicio de correos. De esta manera se pueden hacer pruebas sin depender de internet o sistemas externos reales. También usaría drivers para probar módulos pequeños que todavía no tienen una interfaz principal completa, simulando  
+En un proyecto real con microservicios o bases de datos externas usaría stubs para simular servicios que todavía no existen o son difíciles de controlar durante las pruebas, por ejemplo una API de pagos o un servicio de correos. De esta manera se pueden hacer pruebas sin depender de internet o sistemas externos reales. También usaría drivers para probar módulos pequeños que todavía no tienen una interfaz principal completa, simulando las llamadas de entrada para probar módulos aún no conectados a una interfaz completa. En ambos casos el objetivo es aislar las pruebas de dependencias externas costosas o inestables, logrando pruebas rápidas, deterministas y reproducibles en cualquier entorno."
+
+
 
 ## 📦 8. Anexo: Contenido Opcional (Puntos Extra)
 
