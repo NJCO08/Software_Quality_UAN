@@ -42,7 +42,7 @@ Todo lo que el usuario ve y espera como resultado quedó sin comprobar. Las prue
 
 El error fundamental de las pruebas iniciales es que confundieron interacción con validación. Estas solo se limitaron  a comprobar que los componentes existían y respondían, pero pasaron por alto los resultados visuales que es lo que realmente le importa al usuario. 
 
-**\*\*Parte 3 — Sabotaje:\*\***
+## Parte 3 — Sabotaje:
 
 **\- ¿Las pruebas iniciales detectaron la modificación maliciosa?**
 
@@ -58,7 +58,7 @@ En general, la debilidad fundamental tiene tres caras:
 2. **Las pruebas no replican el punto de vista del usuario:** Al usuario no le interesa si el código arroja o no una excepción interna, solo le interesa que si su tarea quedó guardada en la lista, puede guardarla y si puede marcarla como hecha. Una prueba de extremo (E2E) real debe validar el valor esperado del usuario, no solo que los enlaces funcionen.   
 3. **Una suite de pruebas que siempre pasa no es confiable:** Si las pruebas automatizadas son incapaces de detectar cuando algo sale mal, dejan de cumplir su propósito básico. El valor real de una prueba no es que pase todo sin éxito sino que su capacidad de fallar y decir cuando el sistema está roto. 
 
-**\*\*Parte 7 — Reflexión E2E:\*\***
+## Parte 7 — Reflexión E2E:
 
 **\- Explica con tus palabras qué es un flaky test y da un ejemplo concreto.**
 
