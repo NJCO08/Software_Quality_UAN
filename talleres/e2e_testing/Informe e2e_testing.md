@@ -1,4 +1,4 @@
-**\*\*Parte 2 — Análisis:\*\***
+## Parte 2 — Análisis:
 
 **\- ¿Las pruebas iniciales verifican algo útil? ¿Por qué?**
 
