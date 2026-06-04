@@ -1,5 +1,10 @@
 """
-Se mejoraron las pruebas existentes
+test_tareas_e2e.py — Pruebas E2E iniciales (versión débil).
+
+⚠️ ESTAS PRUEBAS SON INTENCIONALMENTE DÉBILES.
+   Pasan aunque el sistema tenga errores graves.
+   El estudiante deberá identificar sus limitaciones y mejorarlas.
+
 Ejecutar:
     pytest tests/test_tareas_e2e.py -v
 """
@@ -26,6 +31,9 @@ class TestCrearTareaFuerte:
 
         # Verifica la cantidad exacta en el DOM
         expect(task_page.tarea_items).to_have_count(2)
+
+        expect(task_page.obtener_tarea(0).locator("[data-testid='tarea-titulo']")).to_have_text("Tarea 1")
+        expect(task_page.obtener_tarea(1).locator("[data-testid='tarea-titulo']")).to_have_text("Tarea 2")
 
     def test_input_se_limpia_tras_crear_tarea(self, page):
         task_page = TaskPage(page)
